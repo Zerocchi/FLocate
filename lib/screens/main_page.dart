@@ -30,7 +30,6 @@ class _ContentState extends State<Content> {
   GoogleMapController mapController;
   Placemark address;
   String addressString;
-  Marker marker;
 
   @override
   void initState() {
@@ -46,9 +45,6 @@ class _ContentState extends State<Content> {
   void _onMapCreated(GoogleMapController controller) {
     setState(() {
       mapController = controller;
-      mapController.addMarker(MarkerOptions(
-        position: LatLng(0.0, 0.0)
-      )).then((m)=>marker=m);
     });
   }
 
@@ -65,9 +61,6 @@ class _ContentState extends State<Content> {
           tilt: 30.0,
           zoom: 17.0,
         ),
-      ));
-      mapController.updateMarker(marker, MarkerOptions(
-        position: LatLng(position.latitude, position.longitude)
       ));
     });
   }
@@ -118,6 +111,13 @@ class _ContentState extends State<Content> {
                 height: 400.0,
                 child: GoogleMap(
                   onMapCreated: _onMapCreated,
+                  options: GoogleMapOptions(
+                    mapType: MapType.satellite,
+                    cameraPosition: CameraPosition(
+                      target: LatLng(position.latitude, position.longitude)
+                    ),
+                    myLocationEnabled: true
+                  ),
                 ),
               ),
               Expanded(child: _addressCard(address, position),),
